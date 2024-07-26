@@ -34,6 +34,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -48,6 +52,7 @@ dependencies {
     implementation(libs.bundles.room)
     implementation(libs.bundles.retrofit)
     ksp(libs.room.compiler)
+    implementation(libs.bundles.responsive)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

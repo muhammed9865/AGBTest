@@ -13,6 +13,7 @@ retrofit = "2.11.0"
 room = "2.6.1"
 ksp = "2.0.0-1.0.23"
 lifecycle = "2.8.4"
+sdp-ssp = "1.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -31,12 +32,15 @@ retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-
 room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+sdp = { group = "com.intuit.sdp", name = "sdp-android", version.ref = "sdp-ssp" }
+ssp = { group = "com.intuit.ssp", name = "ssp-android", version.ref = "sdp-ssp" }
 
 
 [bundles]
 room = ["room", "room-ktx"]
 retrofit = ["retrofit", "retrofit-converter-gson"]
 viewModel = ["androidx-lifecycle-viewmodel", "androidx-viewmodel-savedstate"]
+responsive = ["sdp", "ssp"]
 
 
 [plugins]

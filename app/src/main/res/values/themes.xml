@@ -1,9 +1,18 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.ABGTest" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">#65558F</item>
+        <item name="colorSurface">#FEF7FF</item>
+        <item name="colorOnSurface">#1D1B20</item>
+        <item name="colorOnSurfaceVariant">#49454F</item>
+        <item name="colorSecondary">#625B71</item>
+        <item name="android:colorBackground">?attr/colorSurface</item>
     </style>
 
+    <style name="ABG.Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorControlNormal">?attr/colorOnSurface</item>
+        <item name="android:textColorSecondary">#FF002312</item>
+    </style>
     <style name="Theme.ABGTest" parent="Base.Theme.ABGTest" />
 </resources>
