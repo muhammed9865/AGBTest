@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.hiltPlugin)
 }
 
 android {
@@ -51,8 +52,13 @@ dependencies {
     implementation(libs.bundles.viewModel)
     implementation(libs.bundles.room)
     implementation(libs.bundles.retrofit)
-    ksp(libs.room.compiler)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.bundles.responsive)
+    implementation(libs.hilt)
+    implementation(libs.coil)
+    ksp(libs.hilt.compiler)
+    ksp(libs.room.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.salman.abgtest.presentation.screen.details.DetailsFragment"
+        android:label="DetailsFragment" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.salman.abgtest.presentation.screen.home.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_moreFragment"
+            app:destination="@id/moreFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/moreFragment"
+        android:name="com.salman.abgtest.presentation.screen.more.MoreFragment"
+        android:label="MoreFragment" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.salman.abgtest.presentation.screen.search.SearchFragment"
+        android:label="SearchFragment" />
+</navigation>
