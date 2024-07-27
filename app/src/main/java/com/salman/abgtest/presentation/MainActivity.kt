@@ -5,7 +5,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.navigation.findNavController
+import androidx.core.view.isInvisible
+import androidx.navigation.fragment.NavHostFragment
 import com.salman.abgtest.R
 import com.salman.abgtest.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -14,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private var _binding: ActivityMainBinding? = null
-    private val navController by lazy { findNavController(R.id.fragmentContainerView) }
+    private val navController by lazy { binding.fragmentContainerView.getFragment<NavHostFragment>().navController }
     private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +34,12 @@ class MainActivity : AppCompatActivity() {
     private fun setListeners() {
         binding.ivSearch.setOnClickListener {
             navController.navigate(R.id.searchFragment)
+        }
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.searchFragment -> binding.ivSearch.isInvisible = true
+                else -> binding.ivSearch.isInvisible = false
+            }
         }
     }
 

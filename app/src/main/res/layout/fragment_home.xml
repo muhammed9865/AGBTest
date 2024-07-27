@@ -3,17 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/materialTextView"
+            android:id="@+id/tv_now_playing"
             style="@style/ABG.Text.SectionTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16sdp"
             android:drawablePadding="@dimen/_16sdp"
             android:text="@string/now_playing"
             app:drawableEndCompat="@drawable/ic_arrow_right"
@@ -25,27 +27,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_4sdp"
+            android:clipToPadding="false"
             android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/_12sdp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/materialTextView"
+            app:layout_constraintTop_toBottomOf="@+id/tv_now_playing"
             tools:listitem="@layout/list_item_movie" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress_bar_now_playing_loading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_8sdp"
+            style="@style/ABG.ProgressIndicator.Horizontal"
             android:indeterminate="true"
-            app:layout_constraintTop_toBottomOf="@+id/materialTextView" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_now_playing" />
 
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/materialTextView1"
+            android:id="@+id/tv_popular"
             style="@style/ABG.Text.SectionTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16sdp"
             android:layout_marginTop="@dimen/_24sdp"
             android:drawablePadding="@dimen/_16sdp"
             android:text="@string/popular"
@@ -58,26 +62,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_4sdp"
+            android:clipToPadding="false"
             android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/_12sdp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/materialTextView1"
+            app:layout_constraintTop_toBottomOf="@+id/tv_popular"
             tools:listitem="@layout/list_item_movie" />
 
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress_bar_popular_loading"
+            style="@style/ABG.ProgressIndicator.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/ABG.ProgressIndicator.Horizontal"
             android:indeterminate="true"
-            app:layout_constraintTop_toBottomOf="@id/materialTextView1" />
+            app:layout_constraintTop_toBottomOf="@id/tv_popular" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/materialTextView2"
+            android:id="@+id/tv_top_rated"
             style="@style/ABG.Text.SectionTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16sdp"
             android:layout_marginTop="@dimen/_24sdp"
             android:drawablePadding="@dimen/_16sdp"
             android:text="@string/top_rated"
@@ -90,25 +97,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_4sdp"
+            android:clipToPadding="false"
             android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/_12sdp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/materialTextView2"
+            app:layout_constraintTop_toBottomOf="@+id/tv_top_rated"
             tools:listitem="@layout/list_item_movie" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress_bar_top_rated_loading"
+            style="@style/ABG.ProgressIndicator.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/ABG.ProgressIndicator.Horizontal"
             android:indeterminate="true"
-            app:layout_constraintTop_toBottomOf="@id/materialTextView2" />
+            app:layout_constraintTop_toBottomOf="@id/tv_top_rated" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/materialTextView3"
+            android:id="@+id/tv_upcoming"
             style="@style/ABG.Text.SectionTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16sdp"
             android:layout_marginTop="@dimen/_24sdp"
             android:drawablePadding="@dimen/_16sdp"
             android:text="@string/upcoming"
@@ -121,19 +131,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_4sdp"
+            android:clipToPadding="false"
             android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/_12sdp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/materialTextView3"
+            app:layout_constraintTop_toBottomOf="@+id/tv_upcoming"
             tools:listitem="@layout/list_item_movie" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress_bar_upcoming_loading"
+            style="@style/ABG.ProgressIndicator.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/ABG.ProgressIndicator.Horizontal"
             android:indeterminate="true"
-            app:layout_constraintTop_toBottomOf="@id/materialTextView3" />
+            app:layout_constraintTop_toBottomOf="@id/tv_upcoming" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
