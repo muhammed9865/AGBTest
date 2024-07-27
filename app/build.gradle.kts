@@ -1,9 +1,17 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hiltPlugin)
     alias(libs.plugins.navigationSafeArgsKotlin)
+}
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use { localProperties.load(it) }
 }
 
 android {
@@ -18,6 +26,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        val apiKey = localProperties.getProperty("TMDB_API_KEY")
+        if (apiKey != null) {
+            buildConfigField("String", "TMDB_API_KEY", "\"${apiKey}\"")
+        } else {
+            throw GradleException("TMDB_API_KEY not found in local.properties")
+        }
     }
 
     buildTypes {
@@ -39,6 +53,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
