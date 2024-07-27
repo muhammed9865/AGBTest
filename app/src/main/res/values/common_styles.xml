@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="ABG.Image.Rounded" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">10%</item>
+    </style>
+
+    <style name="ABG.ProgressIndicator.Horizontal" parent="">
+        <item name="android:layout_marginHorizontal" tools:targetApi="o">@dimen/_24sdp</item>
+        <item name="android:layout_marginVertical" tools:targetApi="o">@dimen/_24sdp</item>
+    </style>
+</resources>
