@@ -1,0 +1,8 @@
+<com.google.android.material.chip.Chip android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/Widget.MaterialComponents.Chip.Choice"
+    app:chipIconSize="@dimen/_16sdp"
+    tools:text="Test"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

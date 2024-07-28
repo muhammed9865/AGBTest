@@ -9,4 +9,12 @@
         <item name="android:layout_marginHorizontal" tools:targetApi="o">@dimen/_24sdp</item>
         <item name="android:layout_marginVertical" tools:targetApi="o">@dimen/_8sdp</item>
     </style>
+
+    <style name="ABG.CardView.BottomRounded" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">0dp</item>
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeBottomRight">@dimen/_8sdp</item>
+        <item name="cornerSizeBottomLeft">@dimen/_8sdp</item>
+    </style>
 </resources>

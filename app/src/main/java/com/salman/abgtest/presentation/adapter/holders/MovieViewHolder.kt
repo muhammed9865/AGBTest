@@ -13,19 +13,24 @@ class MovieViewHolder(
     private val binding: ListItemMovieBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(movie: Movie, showRating: Boolean = false) = with(binding) {
+    fun bind(movie: Movie, showRating: Boolean = false, onMovieClick: (Movie) -> Unit) = with(binding) {
         textViewMovieTitle.text = movie.title
         textViewMovieReleaseDate.text = movie.releaseDate
         textViewRating.apply {
             isVisible = showRating
             if (isVisible) {
-                text = movie.voteAverage.toString()
+                // Show rating with 1 decimal place
+                text = movie.voteAverage.toString().take(3)
             }
         }
         imageViewRatingIcon.isVisible = showRating
         imageViewMoviePoster.load(movie.posterPath) {
             crossfade(true)
             error(android.R.drawable.ic_menu_report_image)
+        }
+
+        root.setOnClickListener {
+            onMovieClick(movie)
         }
     }
 }

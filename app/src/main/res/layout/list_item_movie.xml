@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/_4sdp"
+    android:padding="@dimen/_4sdp"
     android:orientation="vertical">
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -31,8 +31,6 @@
         android:textColor="?attr/colorOnSurface"
         android:textStyle="bold"
         android:layout_marginStart="@dimen/_8sdp"
-        app:autoSizeMaxTextSize="@dimen/_8sdp"
-        app:autoSizeTextType="uniform"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/image_view_movie_poster"
         app:layout_constraintTop_toBottomOf="@+id/image_view_movie_poster"
@@ -46,8 +44,6 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="?attr/colorOnSurfaceVariant"
-        app:autoSizeMaxTextSize="@dimen/_8sdp"
-        app:autoSizeTextType="uniform"
         app:layout_constraintStart_toStartOf="@+id/text_view_movie_title"
         app:layout_constraintTop_toBottomOf="@+id/text_view_movie_title"
         tools:text="2022-02-02" />
@@ -68,8 +64,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/image_view_rating_icon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_star" />

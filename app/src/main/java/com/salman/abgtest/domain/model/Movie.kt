@@ -11,4 +11,8 @@ data class Movie(
     val backdropPath: String,
     val voteAverage: Double,
     val releaseDate: String,
-)
+    val otherImages: Set<String> = emptySet()
+) {
+    val images: Set<String>
+        get() = otherImages
+}

@@ -25,6 +25,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:tabBackground="@drawable/tab_unselected"
+        app:tabMode="fixed"
         app:tabIndicator="@drawable/tab_selected"
         app:tabIndicatorColor="@null"
         app:tabGravity="center"

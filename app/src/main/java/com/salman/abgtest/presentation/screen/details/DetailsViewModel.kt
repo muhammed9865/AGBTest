@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.salman.abgtest.domain.usecase.GetMovieDetailsUC
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -31,15 +31,13 @@ class DetailsViewModel @Inject constructor(
         getMovieDetails(movieId)
     }
 
-    private fun getMovieDetails(movieId: Int) {
+    private fun getMovieDetails(movieId: Int) = viewModelScope.launch(Dispatchers.IO) {
         getMovieDetailsUC(movieId)
-            .onEach { movie ->
-                mutableState.value = DetailsState(movie = movie, networkError = false)
-            }
             .catch {
                 mutableState.value = DetailsState(networkError = true)
+            }.collect { movie ->
+                mutableState.value = DetailsState(movie = movie, networkError = false)
             }
-            .launchIn(viewModelScope)
     }
 
 }

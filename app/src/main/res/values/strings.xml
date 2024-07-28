@@ -4,4 +4,11 @@
     <string name="popular">Popular</string>
     <string name="upcoming">Upcoming</string>
     <string name="top_rated">Top Rated</string>
+    <string name="search_by_keywords">Search by keywords</string>
+    <string name="search_engine">Search Engine</string>
+    <string name="search_for_movies_using_keywords">Search for movies using keywords</string>
+    <string name="couldnt_load_movies">Couldn\'t load movies. Please try again later.</string>
+    <string name="retry">Retry</string>
+    <string name="could_not_find_any_movies_matching_the_search_criteria">Could not find any movies matching the search criteria.</string>
+    <string name="clear_search">Clear Search</string>
 </resources>

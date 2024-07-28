@@ -39,5 +39,9 @@
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.salman.abgtest.presentation.screen.search.SearchFragment"
-        android:label="SearchFragment" />
+        android:label="SearchFragment" >
+        <action
+            android:id="@+id/action_searchFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
 </navigation>

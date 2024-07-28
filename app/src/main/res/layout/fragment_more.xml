@@ -13,6 +13,8 @@
         android:layout_height="wrap_content"
         android:drawablePadding="@dimen/_16sdp"
         android:text="@string/now_playing"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_8sdp"
         app:drawableStartCompat="@drawable/ic_arrow_left"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -34,6 +36,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_category_title"
+        android:layout_marginTop="@dimen/_16sdp"
         app:spanCount="2"
         tools:listitem="@layout/list_item_movie" />
 

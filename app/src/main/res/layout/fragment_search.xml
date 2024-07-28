@@ -1,6 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/materialToolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_arrow_left"
+        android:paddingVertical="@dimen/_4sdp"
+        app:subtitle="@string/search_for_movies_using_keywords"
+        app:subtitleTextAppearance="@style/ABG.Text.Base"
+        app:title="@string/search_engine"
+        app:titleTextAppearance="@style/ABG.Text.SectionTitle" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:animateLayoutChanges="true"
+        app:cardCornerRadius="@dimen/_8sdp"
+        app:cardElevation="@dimen/_4sdp"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="@dimen/_8sdp"
+        app:layout_constraintTop_toBottomOf="@+id/materialToolbar2"
+        app:strokeColor="?attr/colorOutline"
+        tools:layout_editor_absoluteX="10dp">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_field_search_by_keywords"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/search_by_keywords"
+                android:paddingBottom="@dimen/_8sdp" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_selected_keywords"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_view_keywords_suggestions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginTop="-20dp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:animateLayoutChanges="true"
+        app:cardBackgroundColor="?attr/colorSurface"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="@dimen/_4sdp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/materialCardView"
+        app:layout_constraintStart_toStartOf="@+id/materialCardView"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView"
+        app:shapeAppearance="@style/ABG.CardView.BottomRounded">
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/pb_loading_keyword_search_result"
+            style="@style/ABG.ProgressIndicator.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group_keywords_search_result"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_search_result"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingBottom="@dimen/_24sdp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintTop_toBottomOf="@+id/card_view_keywords_suggestions"
+        app:spanCount="2"
+        tools:listitem="@layout/list_item_movie" />
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/pb_loading_movies"
+        style="@style/ABG.ProgressIndicator.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/materialCardView" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/materialTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/could_not_find_any_movies_matching_the_search_criteria"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="@dimen/_12ssp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/materialCardView"
+        app:layout_constraintStart_toStartOf="@+id/materialCardView"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_clear_search"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/clear_search"
+        app:layout_constraintEnd_toEndOf="@+id/materialTextView"
+        app:layout_constraintStart_toStartOf="@+id/materialTextView"
+        app:layout_constraintTop_toBottomOf="@+id/materialTextView" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_no_search_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="materialTextView, button_clear_search" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
