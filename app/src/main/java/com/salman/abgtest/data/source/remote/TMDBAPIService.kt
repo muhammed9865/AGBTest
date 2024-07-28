@@ -1,9 +1,9 @@
-package com.salman.abgtest.data.source
+package com.salman.abgtest.data.source.remote
 
-import com.salman.abgtest.data.model.BaseResponse
-import com.salman.abgtest.data.model.KeywordDTO
-import com.salman.abgtest.data.model.MovieDTO
-import com.salman.abgtest.data.model.MovieImagesDTO
+import com.salman.abgtest.data.model.remote.BaseResponse
+import com.salman.abgtest.data.model.remote.KeywordDTO
+import com.salman.abgtest.data.model.remote.MovieDTO
+import com.salman.abgtest.data.model.remote.MovieImagesDTO
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

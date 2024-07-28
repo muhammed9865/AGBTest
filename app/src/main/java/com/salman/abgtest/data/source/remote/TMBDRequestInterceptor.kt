@@ -1,4 +1,4 @@
-package com.salman.abgtest.data.source
+package com.salman.abgtest.data.source.remote
 
 import com.salman.abgtest.BuildConfig
 import okhttp3.Interceptor

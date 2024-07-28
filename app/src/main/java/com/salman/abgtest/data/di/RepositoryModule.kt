@@ -1,6 +1,8 @@
 package com.salman.abgtest.data.di
 
+import com.salman.abgtest.data.repository.MoviesRepositoryImpl
 import com.salman.abgtest.data.repository.SearchRepositoryImpl
+import com.salman.abgtest.domain.repository.MoviesRepository
 import com.salman.abgtest.domain.repository.SearchRepository
 import dagger.Binds
 import dagger.Module
@@ -21,5 +23,11 @@ abstract class RepositoryModule {
     abstract fun bindSearchRepository(
         searchRepositoryImpl: SearchRepositoryImpl
     ): SearchRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindMoviesRepository(
+        moviesRepositoryImpl: MoviesRepositoryImpl
+    ): MoviesRepository
 
 }

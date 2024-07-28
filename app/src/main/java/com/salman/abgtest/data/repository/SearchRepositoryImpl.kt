@@ -1,7 +1,7 @@
 package com.salman.abgtest.data.repository
 
 import com.salman.abgtest.data.mapper.toDomain
-import com.salman.abgtest.data.source.TMDBAPIService
+import com.salman.abgtest.data.source.remote.TMDBAPIService
 import com.salman.abgtest.domain.model.Keyword
 import com.salman.abgtest.domain.model.Movie
 import com.salman.abgtest.domain.model.exception.NetworkException

@@ -1,4 +1,4 @@
-package com.salman.abgtest.data.model
+package com.salman.abgtest.data.model.remote
 
 data class KeywordDTO(
     val id: Int,

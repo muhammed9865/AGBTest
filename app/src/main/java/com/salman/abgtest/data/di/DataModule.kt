@@ -1,13 +1,15 @@
 package com.salman.abgtest.data.di
 
-import com.salman.abgtest.data.repository.SearchRepositoryImpl
-import com.salman.abgtest.data.source.TMBDRequestInterceptor
-import com.salman.abgtest.data.source.TMDBAPIService
-import com.salman.abgtest.domain.repository.SearchRepository
-import dagger.Binds
+import android.content.Context
+import androidx.room.Room
+import com.salman.abgtest.data.source.SourcesConstants
+import com.salman.abgtest.data.source.local.MoviesDatabase
+import com.salman.abgtest.data.source.remote.TMBDRequestInterceptor
+import com.salman.abgtest.data.source.remote.TMDBAPIService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -34,7 +36,7 @@ class DataModule {
 
         return Retrofit.Builder()
             .client(client)
-            .baseUrl("https://api.themoviedb.org/3/")
+            .baseUrl(SourcesConstants.REMOTE_SOURCE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -45,4 +47,16 @@ class DataModule {
     ): TMDBAPIService {
         return retrofit.create(TMDBAPIService::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideMoviesDatabase(
+        @ApplicationContext context: Context
+    ) = MoviesDatabase.create(context)
+
+    @Provides
+    @Singleton
+    fun provideMoviesDao(
+        database: MoviesDatabase
+    ) = database.moviesDAO
 }

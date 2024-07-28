@@ -1,4 +1,4 @@
-package com.salman.abgtest.data.model
+package com.salman.abgtest.data.model.remote
 
 import com.google.gson.annotations.SerializedName
 

@@ -1,6 +1,6 @@
 package com.salman.abgtest.data.mapper
 
-import com.salman.abgtest.data.model.KeywordDTO
+import com.salman.abgtest.data.model.remote.KeywordDTO
 import com.salman.abgtest.domain.model.Keyword
 
 /**

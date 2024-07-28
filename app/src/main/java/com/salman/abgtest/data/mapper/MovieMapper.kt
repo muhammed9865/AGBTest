@@ -1,7 +1,10 @@
 package com.salman.abgtest.data.mapper
 
-import com.salman.abgtest.data.model.MovieDTO
+import com.salman.abgtest.data.model.local.MovieEntity
+import com.salman.abgtest.data.model.local.MovieWithImages
+import com.salman.abgtest.data.model.remote.MovieDTO
 import com.salman.abgtest.domain.model.Movie
+import com.salman.abgtest.domain.model.MovieCategory
 
 /**
  * Created by Muhammed Salman email(mahmadslman@gmail.com) on 7/27/2024.
@@ -17,6 +20,40 @@ fun MovieDTO.toDomain(): Movie {
         title = title,
         voteAverage = voteAverage,
     )
+}
+
+fun MovieDTO.toEntity(category: MovieCategory): MovieEntity {
+    return MovieEntity(
+        id,
+        title,
+        overview,
+        posterPath,
+        backdropPath,
+        voteAverage,
+        releaseDate,
+        category
+    )
+}
+
+fun MovieWithImages.toDomain(): Movie {
+    val images = images.map { it.path.appendImageUrl() }
+    return Movie(
+        id = movieEntity.id,
+        title = movieEntity.title,
+        overview = movieEntity.overview,
+        posterPath = movieEntity.posterPath.appendImageUrl(),
+        backdropPath = movieEntity.backdropPath.appendImageUrl(),
+        voteAverage = movieEntity.voteAverage,
+        releaseDate = movieEntity.releaseDate,
+        otherImages = images.toSet()
+    )
+}
+
+fun MovieCategory.toQuery() = when (this) {
+    MovieCategory.NOW_PLAYING -> "now_playing"
+    MovieCategory.POPULAR -> "popular"
+    MovieCategory.TOP_RATED -> "top_rated"
+    MovieCategory.UPCOMING -> "upcoming"
 }
 
 private fun String.appendImageUrl(): String {
