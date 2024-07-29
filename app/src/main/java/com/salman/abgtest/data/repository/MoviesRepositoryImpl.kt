@@ -1,17 +1,18 @@
 package com.salman.abgtest.data.repository
 
+import android.util.Log
 import com.salman.abgtest.data.mapper.toDomain
 import com.salman.abgtest.data.mapper.toEntity
 import com.salman.abgtest.data.mapper.toQuery
 import com.salman.abgtest.data.model.local.MovieEntity
 import com.salman.abgtest.data.model.local.MovieWithImages
+import com.salman.abgtest.data.source.ConnectivityManager
 import com.salman.abgtest.data.source.SourcesConstants
 import com.salman.abgtest.data.source.local.MoviesDAO
 import com.salman.abgtest.data.source.remote.TMDBAPIService
 import com.salman.abgtest.domain.model.Movie
 import com.salman.abgtest.domain.model.MovieCategory
 import com.salman.abgtest.domain.repository.MoviesRepository
-import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
@@ -21,43 +22,60 @@ import javax.inject.Inject
 class MoviesRepositoryImpl @Inject constructor(
     private val moviesLocalSource: MoviesDAO,
     private val moviesRemoteSource: TMDBAPIService,
+    private val connectivityManager: ConnectivityManager
 ) : MoviesRepository {
+
+    companion object {
+        private const val TAG = "MoviesRepositoryImpl"
+    }
     override suspend fun getMoviesByCategory(
         page: Int,
         category: MovieCategory,
         syncWithRemote: Boolean
     ): List<Movie> {
-        if (syncWithRemote) {
+        Log.d(TAG, "getMoviesByCategory: $category, page: $page, syncWithRemote: $syncWithRemote")
+        val shouldSyncWithRemote = syncWithRemote || getCachedMovies(category, page).isEmpty()
+        if (shouldSyncWithRemote && connectivityManager.isConnected()) {
             syncSources(category, page)
         }
 
-        val moviesWithImages = getMovies(category, page)
+        val moviesWithImages = getCachedMovies(category, page)
         return moviesWithImages.map { it.toDomain() }
     }
 
     override suspend fun getMovieDetails(movieId: Int): Movie {
-        val movieWithImages = moviesLocalSource.getMovieById(movieId)
-        val shouldFetchImages = movieWithImages.movieEntity.fetchedRemoteImages.not()
-        if (shouldFetchImages) {
-            updateMovieImages(movieWithImages.movieEntity)
-            // Fetching latest updated version of movie
-            return moviesLocalSource.getMovieById(movieId).toDomain()
+        val movieEntity = moviesLocalSource.getMovieById(movieId)?.movieEntity ?: run {
+            // Fetching movie details from remote source
+            val movieEntity = moviesRemoteSource.getMovieById(movieId).toEntity()
+            moviesLocalSource.insertMovies(listOf(movieEntity))
+            movieEntity
         }
 
-        return movieWithImages.toDomain()
+        val shouldFetchImages = movieEntity.fetchedRemoteImages.not()
+        if (shouldFetchImages) {
+            updateMovieImages(movieEntity)
+        }
+
+        // Fetching latest updated movie details
+        return moviesLocalSource.getMovieById(movieId)!!.toDomain()
     }
 
     private suspend fun syncSources(category: MovieCategory, page: Int = 1) = coroutineScope {
-        val deleteCache = async { moviesLocalSource.deleteCachedMovies() }
-        val moviesRemoteRequest =
-            async { moviesRemoteSource.getMoviesByCategory(category.toQuery(), page = page) }
+        val moviesRemoteRequest = runCatching {
+            moviesRemoteSource.getMoviesByCategory(category.toQuery(), page = page)
+        }
 
-        deleteCache.await()
-        val moviesDTO = moviesRemoteRequest.await().results.map { it.toEntity(category) }
+        // If remote request fails, skip clearing cache
+        if (moviesRemoteRequest.isFailure) {
+            return@coroutineScope
+        }
+
+        moviesLocalSource.deleteCachedMovies()
+        val moviesDTO = moviesRemoteRequest.getOrThrow().results.map { it.toEntity(category) }
         moviesLocalSource.insertMovies(moviesDTO)
     }
 
-    private suspend fun getMovies(category: MovieCategory, page: Int): List<MovieWithImages> {
+    private suspend fun getCachedMovies(category: MovieCategory, page: Int): List<MovieWithImages> {
         val pageSize = SourcesConstants.MOVIES_PAGE_SIZE
         val offset = (page - 1) * pageSize // -1 to start from offset 0 if page = 1
 

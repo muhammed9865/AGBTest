@@ -3,15 +3,20 @@ package com.salman.abgtest.presentation.screen.search
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.salman.abgtest.domain.model.Keyword
+import com.salman.abgtest.domain.model.Movie
 import com.salman.abgtest.domain.model.Resource
 import com.salman.abgtest.domain.usecase.SearchKeywordsUC
 import com.salman.abgtest.domain.usecase.SearchMoviesByKeywordsUC
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.launchIn
@@ -39,14 +44,20 @@ class SearchViewModel @Inject constructor(
     private val searchKeywordsFlow = MutableStateFlow("")
     private var searchKeywordsJob: Job? = null
 
+    private var moviesPagesFlow: Flow<PagingData<Movie>>? = null
+
     init {
         // use debounce to avoid multiple search requests
         searchKeywordsFlow.debounce(SEARCH_DEBOUNCE_MILLIS)
             .filterNot { query -> query.isBlank() }
             .onEach { query ->
                 searchKeywordsJob = viewModelScope.launch {
-                    searchKeywordsUC(query).collect { keywordsResource ->
-                        Log.d("SearchViewModel", "SearchKeywordsFlow: $query, Result: $keywordsResource")
+                    val selectedKeywords = state.value.selectedKeywords
+                    searchKeywordsUC(selectedKeywords, query).collect { keywordsResource ->
+                        Log.d(
+                            "SearchViewModel",
+                            "SearchKeywordsFlow: $query, Result: $keywordsResource"
+                        )
                         mutableState.update {
                             it.copy(searchKeywordsResult = keywordsResource)
                         }
@@ -91,12 +102,19 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun searchMovies() {
-        searchMoviesByKeywordsUC(state.value.selectedKeywords).onEach { moviesResource ->
+        viewModelScope.launch {
             mutableState.update {
-                it.copy(searchMoviesResult = moviesResource)
+                it.copy(searchMoviesPagedResult = PagingData.empty())
             }
-        }.launchIn(viewModelScope)
-    }
+            moviesPagesFlow = searchMoviesByKeywordsUC(state.value.selectedKeywords)
+                .cachedIn(viewModelScope)
 
+            moviesPagesFlow?.collectLatest { pagingData ->
+                mutableState.update {
+                    it.copy(searchMoviesPagedResult = pagingData)
+                }
+            }
+        }
+    }
 
 }

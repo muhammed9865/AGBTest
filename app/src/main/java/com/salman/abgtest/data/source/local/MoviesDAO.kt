@@ -26,12 +26,12 @@ interface MoviesDAO {
 
     @Transaction
     @Query("SELECT * FROM movies WHERE id = :movieId")
-    suspend fun getMovieById(movieId: Int): MovieWithImages
+    suspend fun getMovieById(movieId: Int): MovieWithImages?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateMovie(movieEntity: MovieEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertMovies(movies: List<MovieEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

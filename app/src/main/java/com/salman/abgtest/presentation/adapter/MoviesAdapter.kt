@@ -17,9 +17,7 @@ class MoviesAdapter(
 ) : ListAdapter<Movie, MovieViewHolder>(MOVIE_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = ListItemMovieBinding.inflate(inflater, parent, false)
-        return MovieViewHolder(binding)
+        return MovieViewHolder.create(parent)
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
@@ -29,7 +27,7 @@ class MoviesAdapter(
     }
 
     companion object {
-        private val MOVIE_COMPARATOR = object : DiffUtil.ItemCallback<Movie>() {
+        val MOVIE_COMPARATOR = object : DiffUtil.ItemCallback<Movie>() {
             override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
                 return oldItem.id == newItem.id
             }

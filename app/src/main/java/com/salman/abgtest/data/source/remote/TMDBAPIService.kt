@@ -18,6 +18,10 @@ interface TMDBAPIService {
         @Query("page") page: Int = 1
     ): BaseResponse<MovieDTO>
 
+    @GET("movie/{movieId}")
+    suspend fun getMovieById(
+        @Path("movieId") movieId: Int
+    ): MovieDTO
 
     @GET("movie/{movieId}/images")
     suspend fun getMovieImages(

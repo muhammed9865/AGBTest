@@ -10,25 +10,27 @@ import com.salman.abgtest.domain.model.MovieCategory
  * Created by Muhammed Salman email(mahmadslman@gmail.com) on 7/27/2024.
  */
 
+const val ERROR_IMAGE_URL = "https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg"
+
 fun MovieDTO.toDomain(): Movie {
     return Movie(
-        backdropPath = backdropPath.appendImageUrl(),
+        backdropPath = backdropPath?.appendImageUrl() ?: ERROR_IMAGE_URL,
         id = id,
         overview = overview,
-        posterPath = posterPath.appendImageUrl(),
+        posterPath = posterPath?.appendImageUrl() ?: ERROR_IMAGE_URL,
         releaseDate = releaseDate,
         title = title,
         voteAverage = voteAverage,
     )
 }
 
-fun MovieDTO.toEntity(category: MovieCategory): MovieEntity {
+fun MovieDTO.toEntity(category: MovieCategory = MovieCategory.NONE): MovieEntity {
     return MovieEntity(
         id,
         title,
         overview,
-        posterPath,
-        backdropPath,
+        posterPath ?: ERROR_IMAGE_URL,
+        backdropPath ?: ERROR_IMAGE_URL,
         voteAverage,
         releaseDate,
         category
@@ -54,6 +56,7 @@ fun MovieCategory.toQuery() = when (this) {
     MovieCategory.POPULAR -> "popular"
     MovieCategory.TOP_RATED -> "top_rated"
     MovieCategory.UPCOMING -> "upcoming"
+    MovieCategory.NONE -> throw IllegalArgumentException("NONE category is not allowed")
 }
 
 private fun String.appendImageUrl(): String {
