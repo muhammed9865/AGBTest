@@ -18,6 +18,7 @@ sdp-ssp = "1.1.1"
 navigation = "2.7.7"
 hilt = "2.51"
 coil = "2.7.0"
+paging = "3.3.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,12 +43,14 @@ retrofit-logger = { group = "com.squareup.okhttp3", name = "logging-interceptor"
 room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
 sdp = { group = "com.intuit.sdp", name = "sdp-android", version.ref = "sdp-ssp" }
 ssp = { group = "com.intuit.ssp", name = "ssp-android", version.ref = "sdp-ssp" }
+androidx-paging = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 
 
 [bundles]
-room = ["room", "room-ktx"]
+room = ["room", "room-ktx", "room-paging"]
 retrofit = ["retrofit", "retrofit-converter-gson", "retrofit-logger"]
 viewModel = ["androidx-lifecycle-viewmodel", "androidx-viewmodel-savedstate"]
 responsive = ["sdp", "ssp"]
