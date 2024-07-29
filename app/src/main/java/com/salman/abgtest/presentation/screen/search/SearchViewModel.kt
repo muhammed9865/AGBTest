@@ -3,9 +3,8 @@ package com.salman.abgtest.presentation.screen.search
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.insertFooterItem
-import androidx.paging.insertSeparators
 import com.salman.abgtest.domain.model.Keyword
 import com.salman.abgtest.domain.model.Movie
 import com.salman.abgtest.domain.model.Resource
@@ -14,6 +13,7 @@ import com.salman.abgtest.domain.usecase.SearchMoviesByKeywordsUC
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -44,7 +44,7 @@ class SearchViewModel @Inject constructor(
     private val searchKeywordsFlow = MutableStateFlow("")
     private var searchKeywordsJob: Job? = null
 
-    private var searchMoviesJob: Job? = null
+    private var moviesPagesFlow: Flow<PagingData<Movie>>? = null
 
     init {
         // use debounce to avoid multiple search requests
@@ -101,15 +101,18 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun searchMovies() {
-        searchMoviesJob?.cancel()
-        searchMoviesJob = viewModelScope.launch {
-            searchMoviesByKeywordsUC(state.value.selectedKeywords)
+        viewModelScope.launch {
+            mutableState.update {
+                it.copy(searchMoviesPagedResult = PagingData.empty())
+            }
+            moviesPagesFlow = searchMoviesByKeywordsUC(state.value.selectedKeywords)
                 .cachedIn(viewModelScope)
-                .collectLatest { moviesPage ->
-                    mutableState.update {
-                        it.copy(searchMoviesPagedResult = moviesPage)
-                    }
+
+            moviesPagesFlow?.collectLatest { pagingData ->
+                mutableState.update {
+                    it.copy(searchMoviesPagedResult = pagingData)
                 }
+            }
         }
     }
 

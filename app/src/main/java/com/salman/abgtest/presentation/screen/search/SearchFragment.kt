@@ -13,18 +13,19 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.PagingData
+import androidx.recyclerview.widget.RecyclerView
 import com.salman.abgtest.databinding.FragmentSearchBinding
 import com.salman.abgtest.domain.model.Keyword
 import com.salman.abgtest.domain.model.Movie
 import com.salman.abgtest.domain.model.Resource
 import com.salman.abgtest.domain.model.Status
-import com.salman.abgtest.presentation.adapter.MoviesAdapter
 import com.salman.abgtest.presentation.adapter.MoviesPagingAdapter
 import com.salman.abgtest.presentation.common.AnimatedFragment
 import com.salman.abgtest.presentation.common.addActionChip
 import com.salman.abgtest.presentation.common.addSuggestionChip
 import com.salman.abgtest.presentation.util.gone
 import com.salman.abgtest.presentation.util.hideKeyboard
+import com.salman.abgtest.presentation.util.setNavigationOnClickListener
 import com.salman.abgtest.presentation.util.showErrorSnackbar
 import com.salman.abgtest.presentation.util.showNormalSnackbar
 import com.salman.abgtest.presentation.util.visible
@@ -78,7 +79,8 @@ class SearchFragment : AnimatedFragment<FragmentSearchBinding>() {
             viewModel.searchKeywords(text.toString())
         }
 
-        materialToolbar2.setNavigationOnClickListener {
+        materialToolbar2.setNavigationOnClickListener(300L) {
+            hideKeyboard()
             findNavController().popBackStack()
         }
 
@@ -106,7 +108,6 @@ class SearchFragment : AnimatedFragment<FragmentSearchBinding>() {
     private fun updateKeywordsSearchResult(keywordsResource: Resource<List<Keyword>>) {
         lifecycleScope.launch {
             with(binding) {
-                Log.d("SearchFragment", "updateKeywordsSearchResult: ${keywordsResource.status}")
                 when (keywordsResource.status) {
                     Status.Loading -> {
                         pbLoadingKeywordSearchResult.visible()
@@ -143,29 +144,33 @@ class SearchFragment : AnimatedFragment<FragmentSearchBinding>() {
     private fun handlePagingStates(states: CombinedLoadStates) = with(binding) {
         val append = states.source.append
         val refresh = states.source.refresh
-        Log.d("SearchFragment", "handlePagingStates: $append, $refresh")
+        val error = append is LoadState.Error || refresh is LoadState.Error
+        Log.d("SearchFragment", "handlePagingStates: $append, $refresh $error")
         pbLoadingMovies.isVisible = append is LoadState.Loading || refresh is LoadState.Loading
         if (append.endOfPaginationReached) {
             showNormalSnackbar("No more movies to load")
+        }
+        if (error) {
+            showErrorSnackbar("Could not load movies")
         }
     }
 
     private fun updateMovesRVPage(moviesPage: PagingData<Movie>?) {
         lifecycleScope.launch {
             moviesPage?.let {
-                binding.pbLoadingMovies.gone()
-                adapter.submitData(moviesPage)
+                adapter.submitData(it)
             }
         }
     }
 
     private fun setupRecyclerView() {
+        adapter.stateRestorationPolicy =
+            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         binding.recyclerViewSearchResult.adapter = adapter
     }
 
-    private fun navigateToMovieDetails(movie: Movie) {
+    private fun navigateToMovieDetails(movie: Movie) = lifecycleScope.launch {
         val action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(movie.id)
         findNavController().navigate(action)
     }
-
 }

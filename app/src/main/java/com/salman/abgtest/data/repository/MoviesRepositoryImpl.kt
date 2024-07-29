@@ -36,15 +36,20 @@ class MoviesRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getMovieDetails(movieId: Int): Movie {
-        val movieWithImages = moviesLocalSource.getMovieById(movieId)
-        val shouldFetchImages = movieWithImages.movieEntity.fetchedRemoteImages.not()
-        if (shouldFetchImages) {
-            updateMovieImages(movieWithImages.movieEntity)
-            // Fetching latest updated version of movie
-            return moviesLocalSource.getMovieById(movieId).toDomain()
+        val movieEntity = moviesLocalSource.getMovieById(movieId)?.movieEntity ?: run {
+            // Fetching movie details from remote source
+            val movieEntity = moviesRemoteSource.getMovieById(movieId).toEntity()
+            moviesLocalSource.insertMovies(listOf(movieEntity))
+            movieEntity
         }
 
-        return movieWithImages.toDomain()
+        val shouldFetchImages = movieEntity.fetchedRemoteImages.not()
+        if (shouldFetchImages) {
+            updateMovieImages(movieEntity)
+        }
+
+        // Fetching latest updated movie details
+        return moviesLocalSource.getMovieById(movieId)!!.toDomain()
     }
 
     private suspend fun syncSources(category: MovieCategory, page: Int = 1) = coroutineScope {

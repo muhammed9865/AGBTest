@@ -34,7 +34,7 @@ class SearchRepositoryImpl @Inject constructor(
     }
 
     override fun searchMovies(keywords: List<Keyword>): Flow<PagingData<Movie>> {
-        val remoteSource = SearchRemotePagingSource(moviesRemoteSource, moviesLocalSource, keywords)
+        val remoteSource = SearchRemotePagingSource(moviesRemoteSource, keywords)
         return Pager(
             config = PagingConfig(pageSize = 20, enablePlaceholders = false),
             pagingSourceFactory = { remoteSource }

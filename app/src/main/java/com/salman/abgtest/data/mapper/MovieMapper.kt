@@ -24,7 +24,7 @@ fun MovieDTO.toDomain(): Movie {
     )
 }
 
-fun MovieDTO.toEntity(category: MovieCategory): MovieEntity {
+fun MovieDTO.toEntity(category: MovieCategory = MovieCategory.NONE): MovieEntity {
     return MovieEntity(
         id,
         title,

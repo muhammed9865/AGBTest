@@ -13,7 +13,6 @@ import com.salman.abgtest.domain.model.MovieCategory
  */
 class SearchRemotePagingSource(
     private val moviesRemoteSource: TMDBAPIService,
-    private val moviesLocalSource: MoviesDAO,
     private val keywords: List<Keyword>
 ): PagingSource<Int, MovieDTO>() {
     override fun getRefreshKey(state: PagingState<Int, MovieDTO>): Int? {
@@ -21,11 +20,11 @@ class SearchRemotePagingSource(
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieDTO> {
+        if (keywords.isEmpty()) return LoadResult.Page(emptyList(), null, null)
         val page = params.key ?: 1
         return try {
             val keywordsSeparated = keywords.joinToString(",") { it.id.toString() }
             val response = moviesRemoteSource.discoverMovies(keywordsSeparated, page)
-            cacheMovies(response.results)
             LoadResult.Page(
                 data = response.results,
                 prevKey = if (page == 1) null else page - 1,
@@ -34,9 +33,5 @@ class SearchRemotePagingSource(
         } catch (e: Exception) {
             LoadResult.Error(e)
         }
-    }
-
-    private suspend fun cacheMovies(movies: List<MovieDTO>) {
-        moviesLocalSource.insertMovies(movies.map { it.toEntity(MovieCategory.NONE) })
     }
 }
