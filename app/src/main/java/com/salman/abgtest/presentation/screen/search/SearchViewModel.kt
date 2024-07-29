@@ -52,7 +52,8 @@ class SearchViewModel @Inject constructor(
             .filterNot { query -> query.isBlank() }
             .onEach { query ->
                 searchKeywordsJob = viewModelScope.launch {
-                    searchKeywordsUC(query).collect { keywordsResource ->
+                    val selectedKeywords = state.value.selectedKeywords
+                    searchKeywordsUC(selectedKeywords, query).collect { keywordsResource ->
                         Log.d(
                             "SearchViewModel",
                             "SearchKeywordsFlow: $query, Result: $keywordsResource"

@@ -19,6 +19,8 @@ navigation = "2.7.7"
 hilt = "2.51"
 coil = "2.7.0"
 paging = "3.3.1"
+mockito = "5.12.0"
+coroutines = "1.9.0-RC"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -48,12 +50,16 @@ sdp = { group = "com.intuit.sdp", name = "sdp-android", version.ref = "sdp-ssp" 
 ssp = { group = "com.intuit.ssp", name = "ssp-android", version.ref = "sdp-ssp" }
 androidx-paging = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 
+mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+
 
 [bundles]
 room = ["room", "room-ktx", "room-paging"]
 retrofit = ["retrofit", "retrofit-converter-gson", "retrofit-logger"]
 viewModel = ["androidx-lifecycle-viewmodel", "androidx-viewmodel-savedstate"]
 responsive = ["sdp", "ssp"]
+unitTest = ["junit", "androidx-junit", "mockito", "kotlinx-coroutines-test"]
 
 
 [plugins]
