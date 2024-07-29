@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.bundles.retrofit)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.paging)
     implementation(libs.bundles.responsive)
     implementation(libs.hilt)
     implementation(libs.coil)

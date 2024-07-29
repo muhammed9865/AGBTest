@@ -1,5 +1,7 @@
 package com.salman.abgtest.presentation.adapter.holders
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -31,6 +33,14 @@ class MovieViewHolder(
 
         root.setOnClickListener {
             onMovieClick(movie)
+        }
+    }
+
+    companion object {
+        fun create(parent: ViewGroup): MovieViewHolder {
+            val inflater = LayoutInflater.from(parent.context)
+            val binding = ListItemMovieBinding.inflate(inflater, parent, false)
+            return MovieViewHolder(binding)
         }
     }
 }

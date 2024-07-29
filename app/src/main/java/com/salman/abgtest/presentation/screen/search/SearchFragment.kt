@@ -5,22 +5,28 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
+import androidx.paging.PagingData
 import com.salman.abgtest.databinding.FragmentSearchBinding
 import com.salman.abgtest.domain.model.Keyword
 import com.salman.abgtest.domain.model.Movie
 import com.salman.abgtest.domain.model.Resource
 import com.salman.abgtest.domain.model.Status
 import com.salman.abgtest.presentation.adapter.MoviesAdapter
+import com.salman.abgtest.presentation.adapter.MoviesPagingAdapter
 import com.salman.abgtest.presentation.common.AnimatedFragment
 import com.salman.abgtest.presentation.common.addActionChip
 import com.salman.abgtest.presentation.common.addSuggestionChip
 import com.salman.abgtest.presentation.util.gone
 import com.salman.abgtest.presentation.util.hideKeyboard
 import com.salman.abgtest.presentation.util.showErrorSnackbar
+import com.salman.abgtest.presentation.util.showNormalSnackbar
 import com.salman.abgtest.presentation.util.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -34,8 +40,8 @@ import kotlinx.coroutines.launch
 class SearchFragment : AnimatedFragment<FragmentSearchBinding>() {
 
     private val viewModel: SearchViewModel by viewModels()
-    private val adapter: MoviesAdapter by lazy {
-        MoviesAdapter(onMovieClick = ::navigateToMovieDetails)
+    private val adapter by lazy {
+        MoviesPagingAdapter(onMovieClick = ::navigateToMovieDetails)
     }
 
     override fun inflateBinding(
@@ -59,8 +65,12 @@ class SearchFragment : AnimatedFragment<FragmentSearchBinding>() {
         viewModel.state.onEach {
             updateSelectedKeywords(it.selectedKeywords)
             updateKeywordsSearchResult(it.searchKeywordsResult)
-            updateMoviesRecyclerView(it.searchMoviesResult)
+            updateMovesRVPage(it.searchMoviesPagedResult)
         }.launchIn(lifecycleScope)
+
+        adapter.loadStateFlow
+            .onEach(::handlePagingStates)
+            .launchIn(lifecycleScope)
     }
 
     private fun setListeners() = with(binding) {
@@ -130,34 +140,21 @@ class SearchFragment : AnimatedFragment<FragmentSearchBinding>() {
         }
     }
 
-    private fun updateMoviesRecyclerView(moviesResource: Resource<List<Movie>>) {
+    private fun handlePagingStates(states: CombinedLoadStates) = with(binding) {
+        val append = states.source.append
+        val refresh = states.source.refresh
+        Log.d("SearchFragment", "handlePagingStates: $append, $refresh")
+        pbLoadingMovies.isVisible = append is LoadState.Loading || refresh is LoadState.Loading
+        if (append.endOfPaginationReached) {
+            showNormalSnackbar("No more movies to load")
+        }
+    }
+
+    private fun updateMovesRVPage(moviesPage: PagingData<Movie>?) {
         lifecycleScope.launch {
-            with(binding) {
-                when (moviesResource.status) {
-                    Status.Loading -> {
-                        pbLoadingMovies.visible()
-                        recyclerViewSearchResult.gone()
-                    }
-
-                    Status.Success -> {
-                        pbLoadingMovies.hide()
-                        recyclerViewSearchResult.visible()
-                        adapter.submitList(moviesResource.data)
-                        if (moviesResource.data.isNullOrEmpty()) {
-                            groupNoSearchResult.visible()
-                        }
-                    }
-
-                    Status.Error -> {
-                        pbLoadingMovies.hide()
-                        recyclerViewSearchResult.gone()
-                        showErrorSnackbar("Could not load movies")
-                    }
-
-                    else -> {
-                        // do nothing
-                    }
-                }
+            moviesPage?.let {
+                binding.pbLoadingMovies.gone()
+                adapter.submitData(moviesPage)
             }
         }
     }

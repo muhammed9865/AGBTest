@@ -3,7 +3,11 @@ package com.salman.abgtest.presentation.screen.search
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
+import androidx.paging.insertFooterItem
+import androidx.paging.insertSeparators
 import com.salman.abgtest.domain.model.Keyword
+import com.salman.abgtest.domain.model.Movie
 import com.salman.abgtest.domain.model.Resource
 import com.salman.abgtest.domain.usecase.SearchKeywordsUC
 import com.salman.abgtest.domain.usecase.SearchMoviesByKeywordsUC
@@ -12,6 +16,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.launchIn
@@ -39,6 +44,8 @@ class SearchViewModel @Inject constructor(
     private val searchKeywordsFlow = MutableStateFlow("")
     private var searchKeywordsJob: Job? = null
 
+    private var searchMoviesJob: Job? = null
+
     init {
         // use debounce to avoid multiple search requests
         searchKeywordsFlow.debounce(SEARCH_DEBOUNCE_MILLIS)
@@ -46,7 +53,10 @@ class SearchViewModel @Inject constructor(
             .onEach { query ->
                 searchKeywordsJob = viewModelScope.launch {
                     searchKeywordsUC(query).collect { keywordsResource ->
-                        Log.d("SearchViewModel", "SearchKeywordsFlow: $query, Result: $keywordsResource")
+                        Log.d(
+                            "SearchViewModel",
+                            "SearchKeywordsFlow: $query, Result: $keywordsResource"
+                        )
                         mutableState.update {
                             it.copy(searchKeywordsResult = keywordsResource)
                         }
@@ -91,12 +101,16 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun searchMovies() {
-        searchMoviesByKeywordsUC(state.value.selectedKeywords).onEach { moviesResource ->
-            mutableState.update {
-                it.copy(searchMoviesResult = moviesResource)
-            }
-        }.launchIn(viewModelScope)
+        searchMoviesJob?.cancel()
+        searchMoviesJob = viewModelScope.launch {
+            searchMoviesByKeywordsUC(state.value.selectedKeywords)
+                .cachedIn(viewModelScope)
+                .collectLatest { moviesPage ->
+                    mutableState.update {
+                        it.copy(searchMoviesPagedResult = moviesPage)
+                    }
+                }
+        }
     }
-
 
 }

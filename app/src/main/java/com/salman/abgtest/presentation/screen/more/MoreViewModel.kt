@@ -52,11 +52,13 @@ class MoreViewModel @Inject constructor(
     }
 
     private fun setTitle(category: MovieCategory) {
+        // TODO use string resource in fragment
         val title = when (category) {
             MovieCategory.NOW_PLAYING -> "Now Playing"
             MovieCategory.POPULAR -> "Popular"
             MovieCategory.TOP_RATED -> "Top Rated"
             MovieCategory.UPCOMING -> "Upcoming"
+            MovieCategory.NONE -> "Search"
         }
         mutableState.update {
             it.copy(title = title)
